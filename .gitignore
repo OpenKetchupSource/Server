@@ -39,3 +39,4 @@ out/
 
 ### SECRET-KEY ###
 src/main/resources/application-SECRET-KEY.properties
+bfg-1.15.0.jar

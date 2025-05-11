@@ -20,6 +20,14 @@ spring:
     logging.level:
       org.hibernate.SQL: debug
 
+  kakao:
+    client-id: ${kakao.client-id}
+    redirect-uri: ${kakao.redirect-uri}
+    token-uri: ${kakao.token-uri}
+    user-info-uri: ${kakao.user-info-uri}
+
+  jwt:
+    secret: ${jwt.secret}
 
 #로컬
 #spring:
@@ -38,3 +46,11 @@ spring:
 #  sql:
 #    init:
 #      mode: always # 애플리케이션 시작 시 스크립트 초기화 (기본값: embedded)
+#  kakao:
+#    client-id: ${kakao.client-id}
+#    redirect-uri: ${kakao.redirect-uri}
+#    token-uri: ${kakao.token-uri}
+#    user-info-uri: ${kakao.user-info-uri}
+#
+#  jwt:
+#    secret: ${jwt.secret}

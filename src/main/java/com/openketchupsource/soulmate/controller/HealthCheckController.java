@@ -4,6 +4,8 @@ package com.openketchupsource.soulmate.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.HashMap;
+import java.util.Map;
 
 // 배포 확인용...
 @RestController
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthCheckController {
 
     @GetMapping("/test")
-    public String test() {
-        return "정상 작동 중입니다";
+    public Map<String, String> test() {
+        Map<String, String> result = new HashMap<>();
+        result.put("message", "정상 작동 중입니다");
+        return result;
     }
 }

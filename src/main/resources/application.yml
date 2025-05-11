@@ -1,15 +1,27 @@
 spring:
   datasource:
-    url: jdbc:h2:~/soulmate # 메모리 내 데이터베이스 URL
-    driver-class-name: org.h2.Driver # H2 드라이버 클래스
-    username: sa # 기본 사용자 이름
-    password: # 기본 비밀번호
+    url: jdbc:h2:~/soulmate
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
   h2:
     console:
-      enabled: true # H2 콘솔을 활성화합니다.
-      path: /h2-console # H2 콘솔의 접근 경로
-  hibernate:
-    ddl-auto: update # Hibernate의 DDL 자동 생성 전략 (update, create, create-drop 등)
+      enabled: true
+      path: /h2-console
+  datasource-platform: h2
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
   sql:
     init:
-      mode: always # 애플리케이션 시작 시 스크립트 초기화 (기본값: embedded)
+      mode: always
+
+kakao:
+  client-id: 538bf1cff0878d491d658580a390e409
+  redirect-uri: http://localhost:8080/oauth/kakao/callback
+  token-uri: https://kauth.kakao.com/oauth/token
+  user-info-uri: https://kapi.kakao.com/v2/user/me
+
+jwt:
+  secret: w9X!m73G2n@QvLd*BfP#8VzYkRu6EeZ^tA1oJz$L

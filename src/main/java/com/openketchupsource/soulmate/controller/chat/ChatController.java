@@ -2,7 +2,6 @@ package com.openketchupsource.soulmate.controller.chat;
 
 import com.openketchupsource.soulmate.dto.chat.ChatMessageDto;
 import com.openketchupsource.soulmate.dto.chat.ChatReply2ClientDto;
-import com.openketchupsource.soulmate.member.auth.MemberDetails;
 import com.openketchupsource.soulmate.member.entity.MemberEntity;
 import com.openketchupsource.soulmate.member.service.MemberService;
 import com.openketchupsource.soulmate.service.chat.ChatAIService;

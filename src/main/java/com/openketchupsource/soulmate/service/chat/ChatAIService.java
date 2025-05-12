@@ -97,11 +97,25 @@ public class ChatAIService {
                 .map(m -> new ChatMessageDto(m.getRole(), m.getContent()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        return getReply(messages.get(0).getChat().getCharacter(), dtoList);
+        String character = messages.get(0).getChat().getCharacter();
+        Chat chat = messages.get(0).getChat();
+
+        // GPT로 응답 생성
+        ChatReply2ClientDto reply = getReply(character, dtoList);
+
+        // 저장
+        ChatMessage aiMessage = ChatMessage.builder()
+                .chat(chat)
+                .role(reply.getRole())
+                .content(reply.getContent())
+                .build();
+        chatMessageRepository.save(aiMessage);
+
+        return reply;
     }
 
     public List<ChatMessageDto> getChatMessages(Long chatId) {
-        return chatMessageRepository.findByChatId(chatId).stream()
+        return chatMessageRepository.findByChatIdOrderByCreatedAtAsc(chatId).stream()
                 .map(m -> new ChatMessageDto(m.getRole(), m.getContent()))
                 .toList();
     }

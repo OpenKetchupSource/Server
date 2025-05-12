@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 import java.util.List;
 
@@ -23,14 +24,16 @@ public class ChatController {
     private final ChatAIService chatAIService;
     // private final MemberService memberService;
 
-    // 1. 대화 시작 - chatId 생성
+    // 대화 시작 - chatId 생성
     @PostMapping("/start")
-    public ResponseEntity<Long> startChat(@RequestParam String character) {
-        Long chatId = chatAIService.createChat(character);  // DB에 Chat 생성 후 id 반환
-        return ResponseEntity.ok(chatId);
+    public ResponseEntity<Map<String, Object>> startChat(@RequestParam String character) {
+        Long chatId = chatAIService.createChat(character);
+
+        Map<String, Object> response = Map.of("chatId", chatId);
+        return ResponseEntity.ok(response);
     }
 
-    // 2. 메시지 추가 + 응답
+    // 메시지 추가 + 응답
     @PostMapping("/{chatId}/reply")
     public ResponseEntity<ChatReply2ClientDto> reply(
             @PathVariable Long chatId,
@@ -42,7 +45,7 @@ public class ChatController {
         return ResponseEntity.ok(reply);
     }
 
-    // 3. 전체 대화 조회
+    // 전체 대화 조회
     @GetMapping("/{chatId}")
     public ResponseEntity<List<ChatMessageDto>> getChatHistory(@PathVariable Long chatId) {
         List<ChatMessageDto> history = chatAIService.getChatMessages(chatId);

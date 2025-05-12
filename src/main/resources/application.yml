@@ -29,6 +29,10 @@ spring:
   jwt:
     secret: ${jwt.secret}
 
+  openai:
+    api:
+      key: ${openai.secret-key}
+
 #로컬
 #spring:
 #  datasource:

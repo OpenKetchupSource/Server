@@ -1,5 +1,6 @@
 package com.openketchupsource.soulmate.controller.chat;
 
+import com.openketchupsource.soulmate.dto.chat.ChatInitResponseDto;
 import com.openketchupsource.soulmate.dto.chat.ChatMessageDto;
 import com.openketchupsource.soulmate.dto.chat.ChatReply2ClientDto;
 import com.openketchupsource.soulmate.member.entity.MemberEntity;
@@ -25,11 +26,9 @@ public class ChatController {
 
     // 대화 시작 - chatId 생성
     @PostMapping("/start")
-    public ResponseEntity<Map<String, Object>> startChat(@RequestParam String character) {
-        Long chatId = chatAIService.createChat(character);
-
-        Map<String, Object> response = Map.of("chatId", chatId);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ChatInitResponseDto> startChat(@RequestParam String character) {
+        ChatInitResponseDto initMessage = chatAIService.createChat(character);
+        return ResponseEntity.ok(initMessage);
     }
 
     // 메시지 추가 + 응답

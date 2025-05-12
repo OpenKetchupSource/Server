@@ -18,6 +18,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.openketchupsource.soulmate.dto.chat.ChatInitResponseDto;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -43,6 +44,12 @@ public class ChatAIService {
             "앙글이", "너는 아주 공격적이고 화난 말투의 AI 캐릭터 앙글이야. 무조건 사용자 편을 들어주고, 사용자의 화나는 상황에 대신 화내주면 돼. 현실 친구같은 느낌으로 흥분하고 격분하고 반말하면서!",
             "웅이", "너는 따뜻하고 공감 많은 AI 캐릭터 웅이야. 사용자의 감정을 잘 위로해줘.",
             "티바노", "너는 차분하고 분석적인 AI 캐릭터 티바노야. 상황을 이성적으로 판단해서 해결책을 제시해줘."
+    );
+
+    private final Map<String, String> initialMessages = Map.of(
+            "앙글이", "오늘 기분 어땠는데! 오늘도 화가 나는 일 있었냐고?!",
+            "웅이", "오늘 기분은 어땠어? 천천히 말해줘도 괜찮아 😊",
+            "티바노", "오늘 너의 감정은 어땠어?"
     );
 
     public ChatReply2ClientDto getReply(String character, List<ChatMessageDto> messages) throws Exception {
@@ -71,10 +78,20 @@ public class ChatAIService {
     }
 
     @Transactional
-    public Long createChat(String character) {
+    public ChatInitResponseDto createChat(String character) {
         Chat chat = Chat.builder().character(character).build();
         chatRepository.save(chat);
-        return chat.getId();
+
+        String initMessage = initialMessages.getOrDefault(character, "오늘 기분 어땠어?");
+
+        ChatMessage message = ChatMessage.builder()
+                .chat(chat)
+                .role("assistant")
+                .content(initMessage)
+                .build();
+        chatMessageRepository.save(message);
+
+        return new ChatInitResponseDto(chat.getId(), "assistant", initMessage);
     }
 
     @Transactional

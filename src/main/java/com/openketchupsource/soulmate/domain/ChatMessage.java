@@ -21,6 +21,8 @@ public class ChatMessage {
     private Chat chat;
 
     private String role;    // user, assistant, system
+
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @CreationTimestamp

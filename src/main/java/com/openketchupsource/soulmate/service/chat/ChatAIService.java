@@ -1,12 +1,11 @@
 package com.openketchupsource.soulmate.service.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openketchupsource.soulmate.domain.Character;
 import com.openketchupsource.soulmate.domain.Chat;
 import com.openketchupsource.soulmate.domain.ChatMessage;
-import com.openketchupsource.soulmate.dto.chat.ChatMessageDto;
-import com.openketchupsource.soulmate.dto.chat.ChatReply2ClientDto;
-import com.openketchupsource.soulmate.dto.chat.ChatRequestDto;
-import com.openketchupsource.soulmate.dto.chat.ChatResponseDto;
+import com.openketchupsource.soulmate.dto.chat.*;
+import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatMessageRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatRepository;
 import jakarta.transaction.Transactional;
@@ -18,7 +17,6 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.openketchupsource.soulmate.dto.chat.ChatInitResponseDto;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -36,6 +34,7 @@ public class ChatAIService {
 
     private final ChatRepository chatRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final CharacterRepository characterRepository;
     private final ObjectMapper mapper = new ObjectMapper();
 
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
@@ -78,11 +77,12 @@ public class ChatAIService {
     }
 
     @Transactional
-    public ChatInitResponseDto createChat(String character) {
+    public ChatInitResponseDto createChat(String characterName) {
+        Character character = characterRepository.findByName(characterName);
         Chat chat = Chat.builder().character(character).build();
         chatRepository.save(chat);
 
-        String initMessage = initialMessages.getOrDefault(character, "오늘 기분 어땠어?");
+        String initMessage = initialMessages.getOrDefault(character.getName(), "오늘 기분 어땠어?");
 
         ChatMessage message = ChatMessage.builder()
                 .chat(chat)
@@ -114,7 +114,7 @@ public class ChatAIService {
                 .map(m -> new ChatMessageDto(m.getRole(), m.getContent()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        String character = messages.get(0).getChat().getCharacter();
+        String character = messages.get(0).getChat().getCharacter().getName();
         Chat chat = messages.get(0).getChat();
 
         // GPT로 응답 생성

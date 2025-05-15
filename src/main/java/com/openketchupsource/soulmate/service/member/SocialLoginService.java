@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.service.domain;
+package com.openketchupsource.soulmate.service.member;
 
 import com.openketchupsource.soulmate.auth.jwt.JwtTokenProvider;
 import com.openketchupsource.soulmate.auth.jwt.TokenResponse;

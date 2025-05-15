@@ -1,10 +1,10 @@
 package com.openketchupsource.soulmate.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -12,7 +12,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Character extends BaseTimeEntity {
+@Table(name = "ai_character")
+public class Character {
     @Id
     @GeneratedValue
     private Long id;
@@ -22,6 +23,9 @@ public class Character extends BaseTimeEntity {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String personality;
+
+    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public Character(String name, String personality) {

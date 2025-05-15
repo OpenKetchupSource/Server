@@ -12,7 +12,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Character extends BaseTimeEntity {
+@Table(name = "ai_character")
+public class Character {
     @Id
     @GeneratedValue
     private Long id;

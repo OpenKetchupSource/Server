@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.member.controller;
+package com.openketchupsource.soulmate.controller;
 
 import com.openketchupsource.soulmate.external.oauth.kakao.KakaoSocialLoginService;
 import lombok.RequiredArgsConstructor;

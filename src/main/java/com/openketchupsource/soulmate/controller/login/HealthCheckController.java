@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.controller;
+package com.openketchupsource.soulmate.controller.login;
 
 
 import org.springframework.web.bind.annotation.GetMapping;

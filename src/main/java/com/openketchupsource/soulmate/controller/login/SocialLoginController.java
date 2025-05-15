@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.controller;
+package com.openketchupsource.soulmate.controller.login;
 
 import com.openketchupsource.soulmate.external.oauth.dto.SocialLoginRequest;
 import com.openketchupsource.soulmate.external.oauth.dto.SocialLoginResponse;

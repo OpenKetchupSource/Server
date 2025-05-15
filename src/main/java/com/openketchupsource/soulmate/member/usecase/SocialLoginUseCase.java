@@ -11,8 +11,7 @@ import com.openketchupsource.soulmate.external.oauth.kakao.response.Profile;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.openketchupsource.soulmate.member.entity.MemberEntity;
-import com.openketchupsource.soulmate.member.entity.SocialPlatform;
+import com.openketchupsource.soulmate.member.entity.Member;
 import com.openketchupsource.soulmate.member.service.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +29,12 @@ public class SocialLoginUseCase {
 
     @Transactional
     public SocialLoginResponse login(SocialLoginRequest socialLoginRequest) {
-        MemberEntity memberEntity = null;
+        Member member = null;
         KakaoInfoResponse kakaoInfoResponse = kakaoSocialLoginService.login(socialLoginRequest);
         String sub = String.valueOf(kakaoInfoResponse.id());  // Long → String
 
         if (memberService.isExistsBySub(sub)) {
-            memberEntity = memberService.findBySub(sub);
+            member = memberService.findBySub(sub);
         } else {
             KakaoAccount account = kakaoInfoResponse.kakaoAccount();
             if (account == null || account.profile() == null) {
@@ -49,17 +48,17 @@ public class SocialLoginUseCase {
                 String email = Optional.ofNullable(account)
                         .map(KakaoAccount::email)
                         .orElse("unknown@example.com");
-                memberEntity = MemberEntity.builder()
+                member = Member.builder()
                         .name(name)
                         .email(email != null ? email : "no-email@kakao.com")  // 이메일 동의 안 했을 경우 대비
                         .sub(sub)
                         .build();
-                memberService.saveMember(memberEntity);
+                memberService.saveMember(member);
             }
 
         }
         try {
-            return SocialLoginResponse.of(signUp(memberEntity.getId()));
+            return SocialLoginResponse.of(signUp(member.getId()));
         } catch (NullPointerException e) {
             throw new EntityNotFoundException("회원이 존재하지 않습니다.");
         }

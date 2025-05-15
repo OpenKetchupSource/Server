@@ -1,11 +1,11 @@
 package com.openketchupsource.soulmate.member.repository;
 
-import com.openketchupsource.soulmate.member.entity.MemberEntity;
+import com.openketchupsource.soulmate.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsBySub(String sub);
-    Optional<MemberEntity> findBySub(String sub);
+    Optional<Member> findBySub(String sub);
 }

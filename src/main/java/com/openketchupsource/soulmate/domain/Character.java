@@ -1,6 +1,5 @@
 package com.openketchupsource.soulmate.domain;
 
-import com.openketchupsource.soulmate.member.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

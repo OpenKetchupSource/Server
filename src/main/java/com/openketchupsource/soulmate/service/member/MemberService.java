@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.service.domain;
+package com.openketchupsource.soulmate.service.member;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

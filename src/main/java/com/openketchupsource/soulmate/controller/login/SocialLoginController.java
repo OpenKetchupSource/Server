@@ -3,7 +3,7 @@ package com.openketchupsource.soulmate.controller.login;
 import com.openketchupsource.soulmate.external.oauth.dto.SocialLoginRequest;
 import com.openketchupsource.soulmate.external.oauth.dto.SocialLoginResponse;
 import lombok.RequiredArgsConstructor;
-import com.openketchupsource.soulmate.service.domain.SocialLoginService;
+import com.openketchupsource.soulmate.service.member.SocialLoginService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

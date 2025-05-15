@@ -15,14 +15,13 @@ public class Diary extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(nullable = false)
     private LocalDate date;
 
-    @Setter
     @Column(nullable = false, length = 50)
     private String title;
 
-    @Setter
     @Lob
     @Column(nullable = false)
     private String content;
@@ -31,7 +30,6 @@ public class Diary extends BaseTimeEntity {
     @JoinColumn(name = "member_id", nullable = false )
     private Member member;
 
-    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", nullable = false )
     private Comment comment;

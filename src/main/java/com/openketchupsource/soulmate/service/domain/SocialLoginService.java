@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.member.usecase;
+package com.openketchupsource.soulmate.service.domain;
 
 import com.openketchupsource.soulmate.auth.jwt.JwtTokenProvider;
 import com.openketchupsource.soulmate.auth.jwt.TokenResponse;
@@ -11,8 +11,7 @@ import com.openketchupsource.soulmate.external.oauth.kakao.response.Profile;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.openketchupsource.soulmate.member.entity.Member;
-import com.openketchupsource.soulmate.member.service.MemberService;
+import com.openketchupsource.soulmate.domain.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SocialLoginUseCase {
+public class SocialLoginService {
 
     private final KakaoSocialLoginService kakaoSocialLoginService;
     private final JwtTokenProvider jwtTokenProvider;

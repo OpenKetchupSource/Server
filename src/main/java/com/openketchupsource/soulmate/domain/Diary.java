@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.member.entity;
+package com.openketchupsource.soulmate.domain;
 
 import com.openketchupsource.soulmate.domain.Comment;
 import jakarta.persistence.*;

@@ -1,12 +1,10 @@
-package com.openketchupsource.soulmate.member.entity;
+package com.openketchupsource.soulmate.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Entity
 @Getter

@@ -1,6 +1,7 @@
 package com.openketchupsource.soulmate.domain;
 
 import com.openketchupsource.soulmate.member.entity.BaseTimeEntity;
+import com.openketchupsource.soulmate.member.entity.Diary;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +23,16 @@ public class Comment extends BaseTimeEntity {
     private int isStored;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "characterId", nullable = false)
     private Character character;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "diaryId", nullable = false)
+    private Diary diary;
+
+    @Builder
+    public Comment(String context, Character character) {
+        this.context = context;
+        this.character = character;
+    }
 }

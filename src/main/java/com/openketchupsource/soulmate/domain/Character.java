@@ -23,4 +23,10 @@ public class Character extends BaseTimeEntity {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String personality;
+
+    @Builder
+    public Character(String name, String personality) {
+        this.name = name;
+        this.personality = personality;
+    }
 }

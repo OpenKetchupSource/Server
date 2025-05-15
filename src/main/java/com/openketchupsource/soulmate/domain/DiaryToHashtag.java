@@ -1,8 +1,8 @@
 package com.openketchupsource.soulmate.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.openketchupsource.soulmate.member.entity.Diary;
+import com.openketchupsource.soulmate.member.entity.HashTag;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -16,6 +16,11 @@ public class DiaryToHashtag {
     @GeneratedValue
     private Long id;
 
-    private Long diaryId;
-    private Long hashtagId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "diaryId", nullable = false)
+    private Diary diary;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hashtagId", nullable = false)
+    private HashTag hashtag;
 }

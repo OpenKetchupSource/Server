@@ -23,7 +23,7 @@ public class Character extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String personality;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder

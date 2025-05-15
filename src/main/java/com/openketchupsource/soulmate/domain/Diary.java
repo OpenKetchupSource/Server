@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.member.entity;
+package com.openketchupsource.soulmate.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

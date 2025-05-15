@@ -3,14 +3,10 @@ package com.openketchupsource.soulmate.controller.chat;
 import com.openketchupsource.soulmate.dto.chat.ChatInitResponseDto;
 import com.openketchupsource.soulmate.dto.chat.ChatMessageDto;
 import com.openketchupsource.soulmate.dto.chat.ChatReply2ClientDto;
-import com.openketchupsource.soulmate.member.entity.MemberEntity;
-import com.openketchupsource.soulmate.member.service.MemberService;
 import com.openketchupsource.soulmate.service.chat.ChatAIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
 
 import java.util.List;
 

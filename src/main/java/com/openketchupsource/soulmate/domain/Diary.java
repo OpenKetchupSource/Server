@@ -2,10 +2,7 @@ package com.openketchupsource.soulmate.domain;
 
 import com.openketchupsource.soulmate.domain.Comment;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -21,9 +18,11 @@ public class Diary extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate date;
 
+    @Setter
     @Column(nullable = false, length = 50)
     private String title;
 
+    @Setter
     @Lob
     @Column(nullable = false)
     private String content;
@@ -32,12 +31,13 @@ public class Diary extends BaseTimeEntity {
     @JoinColumn(name = "member_id", nullable = false )
     private Member member;
 
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", nullable = false )
     private Comment comment;
 
     @Builder
-    public Diary(LocalDate date, String title, String content, Member member, Comment comment) {
+    public Diary(LocalDate date, String title, String content, Member member) {
         this.date = date;
         this.title = title;
         this.content = content;

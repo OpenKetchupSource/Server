@@ -17,12 +17,27 @@ public class Chat {
     @GeneratedValue
     private Long id;
 
-//    @ManyToOne
-//    private MemberEntity member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
-    @Column(name = "ai_character") // 예약어 회피
-    private String character; // "앙글이", "웅이", ...
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "character_id", nullable = false)
+    private Character character;
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> messages = new ArrayList<>();
+
+    @Builder
+    public Chat(Member member, Character character) {
+        this.member = member;
+        this.character = character;
+        this.messages = new ArrayList<>();
+    }
+
+    // 메시지 추가 메서드 (양방향 연관관계 편의)
+    public void addMessage(ChatMessage message) {
+        messages.add(message);
+        message.setChat(this);
+    }
 }

@@ -1,10 +1,7 @@
 package com.openketchupsource.soulmate.domain;
 
 import com.openketchupsource.soulmate.member.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -23,4 +20,8 @@ public class Comment extends BaseTimeEntity {
 
     @Column(columnDefinition = "int default '0'", nullable = false)
     private int isStored;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", nullable = false)
+    private Character character;
 }

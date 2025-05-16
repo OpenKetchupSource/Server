@@ -17,8 +17,8 @@ import java.util.Date;
 public class JwtTokenProvider {
     private static final String MEMBER_ID = "memberId";
 
-    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60;
-    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 3;
+    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60;    // 한 시간
+    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 7;     // 일주일
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;

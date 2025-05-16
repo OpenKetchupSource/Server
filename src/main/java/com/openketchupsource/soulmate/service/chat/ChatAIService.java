@@ -81,7 +81,8 @@ public class ChatAIService {
 
     @Transactional
     public ChatInitResponseDto createChat(String characterName) {
-        Character character = characterRepository.findByName(characterName);
+        Character character = characterRepository.findByName(characterName)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 캐릭터입니다: " + characterName));;
         Chat chat = Chat.builder().character(character).build();
         chatRepository.save(chat);
 

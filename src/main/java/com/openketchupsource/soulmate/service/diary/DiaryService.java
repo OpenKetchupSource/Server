@@ -58,7 +58,8 @@ public class DiaryService {
         GptDiaryResponse response = gptClient.generateDiary(prompt);
 
         // 캐릭터 엔티티 조회
-        Character character = characterRepository.findByName(response.character());
+        Character character = characterRepository.findByName(request.character().trim())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 캐릭터입니다: " + response.character()));
 
         // 해시태그 파싱
         List<HashTag> tags = parseHashtags(response.hashtag());

@@ -18,10 +18,6 @@ public class Chat {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "character_id", nullable = false)
     private Character character;
 
@@ -29,8 +25,7 @@ public class Chat {
     private List<ChatMessage> messages = new ArrayList<>();
 
     @Builder
-    public Chat(Member member, Character character) {
-        this.member = member;
+    public Chat(Character character) {
         this.character = character;
         this.messages = new ArrayList<>();
     }

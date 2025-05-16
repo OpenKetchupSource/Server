@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openketchupsource.soulmate.domain.Character;
 import com.openketchupsource.soulmate.domain.Chat;
 import com.openketchupsource.soulmate.domain.ChatMessage;
+import com.openketchupsource.soulmate.domain.Member;
 import com.openketchupsource.soulmate.dto.chat.*;
 import com.openketchupsource.soulmate.dto.diary.GptDiaryPrompt;
 import com.openketchupsource.soulmate.dto.diary.GptDiaryResponse;

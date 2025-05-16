@@ -1,16 +1,15 @@
 package com.openketchupsource.soulmate.service.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openketchupsource.soulmate.domain.*;
 import com.openketchupsource.soulmate.domain.Character;
-import com.openketchupsource.soulmate.domain.Chat;
-import com.openketchupsource.soulmate.domain.ChatMessage;
-import com.openketchupsource.soulmate.domain.Member;
 import com.openketchupsource.soulmate.dto.chat.*;
 import com.openketchupsource.soulmate.dto.diary.GptDiaryPrompt;
 import com.openketchupsource.soulmate.dto.diary.GptDiaryResponse;
 import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatMessageRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatRepository;
+import com.openketchupsource.soulmate.repository.diary.HashTagRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

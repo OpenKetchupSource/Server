@@ -18,7 +18,6 @@ import java.util.List;
 public class ChatController {
 
     private final ChatAIService chatAIService;
-    // private final MemberService memberService;
 
     // 대화 시작 - chatId 생성
     @PostMapping("/start")
@@ -44,13 +43,6 @@ public class ChatController {
     public ResponseEntity<List<ChatMessageDto>> getChatHistory(@PathVariable Long chatId) {
         List<ChatMessageDto> history = chatAIService.getChatMessages(chatId);
         return ResponseEntity.ok(history);
-    }
-
-    @PostMapping("/diary")
-    public ResponseEntity<ChatReply2ClientDto> diary(@RequestParam String character,
-                                                     @RequestBody List<ChatMessageDto> messages) throws Exception {
-        ChatReply2ClientDto diary = chatAIService.getDiary(character, messages);
-        return ResponseEntity.ok(diary);
     }
 }
 

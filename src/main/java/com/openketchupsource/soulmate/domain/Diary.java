@@ -31,7 +31,7 @@ public class Diary extends BaseTimeEntity {
     private Member member;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id", nullable = false )
+    @JoinColumn(name = "comment_id", nullable = true )
     private Comment comment;
 
     // 일기를 쓴 ai 캐릭터가 누구인지 or 코멘트를 단 ai 캐릭터가 누구인지

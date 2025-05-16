@@ -34,11 +34,17 @@ public class Diary extends BaseTimeEntity {
     @JoinColumn(name = "comment_id", nullable = false )
     private Comment comment;
 
+    // 일기를 쓴 ai 캐릭터가 누구인지 or 코멘트를 단 ai 캐릭터가 누구인지
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "character_id", nullable = false)
+    private Character character;
+
     @Builder
-    public Diary(LocalDate date, String title, String content, Member member) {
+    public Diary(LocalDate date, String title, String content, Member member, Character character) {
         this.date = date;
         this.title = title;
         this.content = content;
         this.member = member;
+        this.character = character;
     }
 }

@@ -156,20 +156,48 @@ public class ChatAIService {
         }
 
         ChatRequestDto request = new ChatRequestDto("gpt-3.5-turbo", messages);
-        HttpPost post = new HttpPost(API_URL);
-        post.setHeader("Authorization", "Bearer " + apiKey);
-        post.setHeader("Content-Type", "application/json");
-        post.setEntity(new StringEntity(mapper.writeValueAsString(request), StandardCharsets.UTF_8));
+        // 지피티가 뻘소리 하는 경우가 있어서 while 문으로 검토하기
+//        HttpPost post = new HttpPost(API_URL);
+//        post.setHeader("Authorization", "Bearer " + apiKey);
+//        post.setHeader("Content-Type", "application/json");
+//        post.setEntity(new StringEntity(mapper.writeValueAsString(request), StandardCharsets.UTF_8));
+//
+//        try (CloseableHttpClient client = HttpClients.createDefault();
+//             CloseableHttpResponse response = client.execute(post);
+//             InputStreamReader reader = new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8)) {
+//
+//            ChatResponseDto chatResponse = mapper.readValue(reader, ChatResponseDto.class);
+//            String contentJson = chatResponse.getChoices().get(0).getMessage().getContent();
+//
+//            // JSON으로 된 일기 응답 파싱
+//            return mapper.readValue(contentJson, GptDiaryResponse.class);
+        int retryCount = 0;
+        final int maxRetries = 3;   // 최대 3번 다시 진행
 
-        try (CloseableHttpClient client = HttpClients.createDefault();
-             CloseableHttpResponse response = client.execute(post);
-             InputStreamReader reader = new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8)) {
+        while (retryCount < maxRetries) {
+            HttpPost post = new HttpPost(API_URL);
+            post.setHeader("Authorization", "Bearer " + apiKey);
+            post.setHeader("Content-Type", "application/json");
+            post.setEntity(new StringEntity(mapper.writeValueAsString(request), StandardCharsets.UTF_8));
 
-            ChatResponseDto chatResponse = mapper.readValue(reader, ChatResponseDto.class);
-            String contentJson = chatResponse.getChoices().get(0).getMessage().getContent();
+            try (CloseableHttpClient client = HttpClients.createDefault();
+                 CloseableHttpResponse response = client.execute(post);
+                 InputStreamReader reader = new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8)) {
 
-            // JSON으로 된 일기 응답 파싱
-            return mapper.readValue(contentJson, GptDiaryResponse.class);
+                ChatResponseDto chatResponse = mapper.readValue(reader, ChatResponseDto.class);
+                String contentJson = chatResponse.getChoices().get(0).getMessage().getContent();
+
+                try {
+                    return mapper.readValue(contentJson, GptDiaryResponse.class); // JSON이 맞다면 return
+                } catch (Exception e) {
+                    retryCount++;
+                    System.err.println("[GPT 일기 파싱 실패] 응답 내용: " + contentJson);
+                    if (retryCount == maxRetries) throw new RuntimeException("GPT 응답이 유효한 JSON이 아님", e);
+                }
+
+            }
         }
+
+        throw new RuntimeException("GPT 응답 파싱 실패");
     }
 }

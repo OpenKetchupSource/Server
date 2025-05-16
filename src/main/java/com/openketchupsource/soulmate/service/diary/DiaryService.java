@@ -35,7 +35,7 @@ public class DiaryService {
 
     // ai 채팅 보고 캐릭터가 일기 생성
     @Transactional
-    public Diary createDiaryFromChat(ClientGptDiaryCreateRequest request, Member member) throws Exception {
+    public GptDiaryResponse createDiaryFromChat(ClientGptDiaryCreateRequest request, Member member) throws Exception {
         // Chat 조회
         Chat chat = chatRepository.findById(request.chatId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 Chat 없음"));
@@ -66,6 +66,8 @@ public class DiaryService {
                 .character(character)
                 .build();
 
-        return diaryRepository.save(diary);
+        diaryRepository.save(diary);
+
+        return response;
     }
 }

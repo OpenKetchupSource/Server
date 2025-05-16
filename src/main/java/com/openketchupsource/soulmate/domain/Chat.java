@@ -1,6 +1,5 @@
 package com.openketchupsource.soulmate.domain;
 
-import com.openketchupsource.soulmate.member.entity.MemberEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,12 +17,22 @@ public class Chat {
     @GeneratedValue
     private Long id;
 
-//    @ManyToOne
-//    private MemberEntity member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "character_id", nullable = false)
+    private Character character;
 
-    @Column(name = "ai_character") // 예약어 회피
-    private String character; // "앙글이", "웅이", ...
-
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> messages = new ArrayList<>();
+
+    @Builder
+    public Chat(Character character) {
+        this.character = character;
+        this.messages = new ArrayList<>();
+    }
+
+    // 메시지 추가 메서드 (양방향 연관관계 편의)
+    public void addMessage(ChatMessage message) {
+        messages.add(message);
+        message.setChat(this);
+    }
 }

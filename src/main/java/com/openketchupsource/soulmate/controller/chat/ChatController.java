@@ -3,14 +3,10 @@ package com.openketchupsource.soulmate.controller.chat;
 import com.openketchupsource.soulmate.dto.chat.ChatInitResponseDto;
 import com.openketchupsource.soulmate.dto.chat.ChatMessageDto;
 import com.openketchupsource.soulmate.dto.chat.ChatReply2ClientDto;
-import com.openketchupsource.soulmate.member.entity.MemberEntity;
-import com.openketchupsource.soulmate.member.service.MemberService;
 import com.openketchupsource.soulmate.service.chat.ChatAIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
 
 import java.util.List;
 
@@ -22,7 +18,6 @@ import java.util.List;
 public class ChatController {
 
     private final ChatAIService chatAIService;
-    // private final MemberService memberService;
 
     // 대화 시작 - chatId 생성
     @PostMapping("/start")
@@ -48,13 +43,6 @@ public class ChatController {
     public ResponseEntity<List<ChatMessageDto>> getChatHistory(@PathVariable Long chatId) {
         List<ChatMessageDto> history = chatAIService.getChatMessages(chatId);
         return ResponseEntity.ok(history);
-    }
-
-    @PostMapping("/diary")
-    public ResponseEntity<ChatReply2ClientDto> diary(@RequestParam String character,
-                                                     @RequestBody List<ChatMessageDto> messages) throws Exception {
-        ChatReply2ClientDto diary = chatAIService.getDiary(character, messages);
-        return ResponseEntity.ok(diary);
     }
 }
 

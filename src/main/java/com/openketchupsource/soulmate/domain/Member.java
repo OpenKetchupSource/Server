@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.member.entity;
+package com.openketchupsource.soulmate.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,11 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member")
-public class MemberEntity extends BaseTimeEntity {
+public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,9 +28,12 @@ public class MemberEntity extends BaseTimeEntity {
     private String sub; // 소셜 플랫폼 아이디
 
     @Builder
-    public MemberEntity(String name, String email, String sub) {
+    public Member(String name, String email, String sub) {
         this.name = name;
         this.email = email;
         this.sub = sub;
     }
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Diary> diaries = new ArrayList<>();
 }

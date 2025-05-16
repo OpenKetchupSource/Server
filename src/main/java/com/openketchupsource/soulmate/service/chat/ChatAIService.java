@@ -1,14 +1,15 @@
 package com.openketchupsource.soulmate.service.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openketchupsource.soulmate.domain.Chat;
-import com.openketchupsource.soulmate.domain.ChatMessage;
-import com.openketchupsource.soulmate.dto.chat.ChatMessageDto;
-import com.openketchupsource.soulmate.dto.chat.ChatReply2ClientDto;
-import com.openketchupsource.soulmate.dto.chat.ChatRequestDto;
-import com.openketchupsource.soulmate.dto.chat.ChatResponseDto;
+import com.openketchupsource.soulmate.domain.*;
+import com.openketchupsource.soulmate.domain.Character;
+import com.openketchupsource.soulmate.dto.chat.*;
+import com.openketchupsource.soulmate.dto.diary.GptDiaryPrompt;
+import com.openketchupsource.soulmate.dto.diary.GptDiaryResponse;
+import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatMessageRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatRepository;
+import com.openketchupsource.soulmate.repository.diary.HashTagRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -18,10 +19,10 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.openketchupsource.soulmate.dto.chat.ChatInitResponseDto;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,6 +37,7 @@ public class ChatAIService {
 
     private final ChatRepository chatRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final CharacterRepository characterRepository;
     private final ObjectMapper mapper = new ObjectMapper();
 
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
@@ -78,11 +80,13 @@ public class ChatAIService {
     }
 
     @Transactional
-    public ChatInitResponseDto createChat(String character) {
+    public ChatInitResponseDto createChat(String characterName) {
+        Character character = characterRepository.findByName(characterName)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 캐릭터입니다: " + characterName));;
         Chat chat = Chat.builder().character(character).build();
         chatRepository.save(chat);
 
-        String initMessage = initialMessages.getOrDefault(character, "오늘 기분 어땠어?");
+        String initMessage = initialMessages.getOrDefault(character.getName(), "오늘 기분 어땠어?");
 
         ChatMessage message = ChatMessage.builder()
                 .chat(chat)
@@ -114,7 +118,7 @@ public class ChatAIService {
                 .map(m -> new ChatMessageDto(m.getRole(), m.getContent()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        String character = messages.get(0).getChat().getCharacter();
+        String character = messages.get(0).getChat().getCharacter().getName();
         Chat chat = messages.get(0).getChat();
 
         // GPT로 응답 생성
@@ -135,5 +139,37 @@ public class ChatAIService {
         return chatMessageRepository.findByChatIdOrderByCreatedAtAsc(chatId).stream()
                 .map(m -> new ChatMessageDto(m.getRole(), m.getContent()))
                 .toList();
+    }
+
+    // 일기 생성 로직
+    public GptDiaryResponse generateDiary(GptDiaryPrompt prompt) throws Exception {
+        // GPT API 요청용 메시지 구성
+        List<ChatMessageDto> messages = new ArrayList<>();
+        messages.add(new ChatMessageDto("system", characterPrompts.getOrDefault(prompt.character(), "") +
+                "지금까지의 대화를 바탕으로 사용자의 하루를 요약한 **일기**를 작성해줘. " +
+                "반드시 **문어체**로 작성해야 하며, **-했다, -였다** 같은 표현을 사용해야 해. " +
+                "**-했어, -였어, -거야**와 같은 말투는 절대 쓰지 마. " +
+                "응답은 JSON 형식으로 해줘. 예: {\"title\": \"...\", \"content\": \"...\", \"hashtag\": \"...\", \"character\": \"...\"}"));
+
+        for (GptDiaryPrompt.ChatLine chatLine : prompt.messages()) {
+            messages.add(new ChatMessageDto(chatLine.role(), chatLine.content()));
+        }
+
+        ChatRequestDto request = new ChatRequestDto("gpt-3.5-turbo", messages);
+        HttpPost post = new HttpPost(API_URL);
+        post.setHeader("Authorization", "Bearer " + apiKey);
+        post.setHeader("Content-Type", "application/json");
+        post.setEntity(new StringEntity(mapper.writeValueAsString(request), StandardCharsets.UTF_8));
+
+        try (CloseableHttpClient client = HttpClients.createDefault();
+             CloseableHttpResponse response = client.execute(post);
+             InputStreamReader reader = new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8)) {
+
+            ChatResponseDto chatResponse = mapper.readValue(reader, ChatResponseDto.class);
+            String contentJson = chatResponse.getChoices().get(0).getMessage().getContent();
+
+            // JSON으로 된 일기 응답 파싱
+            return mapper.readValue(contentJson, GptDiaryResponse.class);
+        }
     }
 }

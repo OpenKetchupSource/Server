@@ -32,7 +32,6 @@ public class SettingService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 캐릭터가 없습니다."));
 
         Chat chat = Chat.builder()
-                .member(member)
                 .character(character)
                 .build();
 

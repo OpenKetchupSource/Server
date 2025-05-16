@@ -55,8 +55,7 @@ public class DiaryService {
         GptDiaryResponse response = gptClient.generateDiary(prompt);
 
         // 캐릭터 엔티티 조회
-        Character character = characterRepository.findByName(response.character())
-                .orElseThrow(() -> new IllegalArgumentException("캐릭터 없음"));
+        Character character = characterRepository.findByName(response.character());
 
         // Diary 생성 및 저장
         Diary diary = Diary.builder()

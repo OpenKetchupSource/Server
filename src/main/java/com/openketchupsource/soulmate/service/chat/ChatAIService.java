@@ -145,7 +145,10 @@ public class ChatAIService {
         // GPT API 요청용 메시지 구성
         List<ChatMessageDto> messages = new ArrayList<>();
         messages.add(new ChatMessageDto("system", characterPrompts.getOrDefault(prompt.character(), "") +
-                " 지금까지 대화를 바탕으로 일기 형식으로 정리해줘. 응답은 JSON 형식으로 해줘. 예: {\"title\": \"...\", \"content\": \"...\", \"hashtag\": \"...\", \"character\": \"...\"}"));
+                "지금까지의 대화를 바탕으로 사용자의 하루를 요약한 **일기**를 작성해줘. " +
+                "반드시 **문어체**로 작성해야 하며, **-했다, -였다** 같은 표현을 사용해야 해. " +
+                "**-했어, -였어, -거야**와 같은 말투는 절대 쓰지 마. " +
+                "응답은 JSON 형식으로 해줘. 예: {\"title\": \"...\", \"content\": \"...\", \"hashtag\": \"...\", \"character\": \"...\"}"));
 
         for (GptDiaryPrompt.ChatLine chatLine : prompt.messages()) {
             messages.add(new ChatMessageDto(chatLine.role(), chatLine.content()));

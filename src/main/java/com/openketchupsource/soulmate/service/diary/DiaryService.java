@@ -59,7 +59,7 @@ public class DiaryService {
 
         // 캐릭터 엔티티 조회
         Character character = characterRepository.findByName(request.character().trim())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 캐릭터입니다: " + response.character()));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 캐릭터입니다: " + request.character()));
 
         // 해시태그 파싱
         List<HashTag> tags = parseHashtags(response.hashtag());
@@ -79,7 +79,12 @@ public class DiaryService {
 
         diaryRepository.save(diary);
 
-        return response;
+        return new GptDiaryResponse(
+                response.title(),
+                response.content(),
+                response.hashtag(),
+                request.character()
+        );
     }
 
     // 지피티가 반환한 Hashtag들을 파싱해서 디비에 저장할 수 있게 하는 역할임다

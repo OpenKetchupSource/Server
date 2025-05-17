@@ -21,8 +21,11 @@ public enum ErrorStatus implements BaseCode {
     KAKAO_INVALID_CODE(HttpStatus.BAD_REQUEST, "KAKAO4002", "카카오 인가 코드가 유효하지 않습니다."),
 
     // 멤버 관려 에러
-    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),
+    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "해당 ID의 사용자가 없습니다."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수입니다."),
+
+    // 캐릭터 관련 에러
+    CHARACTER_NOT_FOUND(HttpStatus.BAD_REQUEST, "CHARACTER4001", "해당 ID의 캐릭터가 없습니다."),
 
     // 일기 관련 에러
     DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4001", "일기가 없습니다."),

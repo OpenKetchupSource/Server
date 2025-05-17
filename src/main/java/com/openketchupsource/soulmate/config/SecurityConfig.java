@@ -1,5 +1,6 @@
-package com.openketchupsource.soulmate.auth;
+package com.openketchupsource.soulmate.config;
 
+import com.openketchupsource.soulmate.auth.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private static final String[] AUTH_WHITE_LIST = {  //인증 없이 접근 가능한 경로 목록
-            "/h2-console/**", "/oauth/**", "/api/oauth/**", "/api/test"
+            "/h2-console/**", "/oauth/**", "/api/oauth/**", "/api/test", "/api/setting/**"
             //"/oauth/**",  // 인가코드 콜백을 받기 위함
             //"/api/oauth/**" // POST 요청도 가능하도록
     };  //인증 없이 접근 가능한 경로 목록

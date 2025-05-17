@@ -7,7 +7,7 @@ import com.openketchupsource.soulmate.domain.Member;
 import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatRepository;
 import com.openketchupsource.soulmate.repository.diary.DiaryRepository;
-import com.openketchupsource.soulmate.repository.domain.MemberRepository;
+import com.openketchupsource.soulmate.repository.member.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

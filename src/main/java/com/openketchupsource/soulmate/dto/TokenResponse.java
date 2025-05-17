@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.auth.jwt;
+package com.openketchupsource.soulmate.dto;
 
 public record TokenResponse(
         String accessToken,

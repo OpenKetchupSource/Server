@@ -1,9 +1,6 @@
 package com.openketchupsource.soulmate.controller.member;
 
 import com.openketchupsource.soulmate.domain.Chat;
-import com.openketchupsource.soulmate.external.oauth.dto.SocialLoginRequest;
-import com.openketchupsource.soulmate.external.oauth.dto.SocialLoginResponse;
-import com.openketchupsource.soulmate.service.chat.ChatAIService;
 import com.openketchupsource.soulmate.service.member.SettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

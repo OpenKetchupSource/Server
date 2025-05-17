@@ -5,8 +5,11 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+/**
+ * 발급받은 access token으로 카카오 사용자 정보를 요청하는 역할
+ */
 @FeignClient(value = "kakaoInfoClient", url = "https://kapi.kakao.com/v2/user/me")
-public interface KakaoInfoClient {
+public interface KakaoInfoRequest {
 
     @GetMapping
     KakaoInfoResponse kakaoInfo(

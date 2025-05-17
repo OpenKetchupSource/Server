@@ -1,6 +1,6 @@
 package com.openketchupsource.soulmate.domain;
 
-import com.openketchupsource.soulmate.domain.Comment;
+import com.openketchupsource.soulmate.domain.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.domain;
+package com.openketchupsource.soulmate.domain.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

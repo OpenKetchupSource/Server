@@ -3,7 +3,7 @@ package com.openketchupsource.soulmate.service.member;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import com.openketchupsource.soulmate.domain.Member;
-import com.openketchupsource.soulmate.repository.domain.MemberRepository;
+import com.openketchupsource.soulmate.repository.member.MemberRepository;
 import org.springframework.stereotype.Component;
 
 @Component

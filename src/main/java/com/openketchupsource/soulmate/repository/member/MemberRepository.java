@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.repository.domain;
+package com.openketchupsource.soulmate.repository.member;
 
 import com.openketchupsource.soulmate.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

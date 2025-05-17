@@ -1,6 +1,6 @@
 package com.openketchupsource.soulmate.controller.login;
 
-import com.openketchupsource.soulmate.external.oauth.kakao.KakaoSocialLoginService;
+import com.openketchupsource.soulmate.service.kakao.KakaoLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 디버깅용 테스트 컨트롤러
+ * 카카오 인가코드 직접 받을 수 있음
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/oauth/kakao")
-public class KakaoAuthController {
+public class AuthCheckController {
 
-    private final KakaoSocialLoginService kakaoSocialLoginService;
+    private final KakaoLoginService kakaoLoginService;
     // 인가 코드 받기 테스트
     @GetMapping("/callback")
     public ResponseEntity<String> kakaoCallback(@RequestParam("code") String code) {

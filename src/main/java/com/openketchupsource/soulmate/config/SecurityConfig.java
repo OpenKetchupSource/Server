@@ -1,15 +1,19 @@
-package com.openketchupsource.soulmate.config;
+package com.openketchupsource.soulmate.auth;
 
-import com.openketchupsource.soulmate.auth.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @RequiredArgsConstructor
@@ -28,7 +32,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)               // REST API에서 보통 꺼둠
                 .formLogin(AbstractHttpConfigurer::disable)      // HTML form 기반 로그인 비활성화 (우린 JWT 기반이라 필요 없음)
                 .requestCache(RequestCacheConfigurer::disable)   // 인증 실패 후 이전 페이지로 리디렉션하는 기능 비활성화
-                .httpBasic(AbstractHttpConfigurer::disable);     // 브라우저 기본 인증창 방식 비활성화
+                .httpBasic(AbstractHttpConfigurer::disable)     // 브라우저 기본 인증창 방식 비활성화
+                .cors(SecurityConfig::corsAllow);
 
         http.authorizeHttpRequests(auth -> {
                     auth.requestMatchers(AUTH_WHITE_LIST).permitAll();  // AUTH_WHITE_LIST에 해당하는 경로만 비인증 허용
@@ -40,4 +45,18 @@ public class SecurityConfig {
         return http.build();
     }
 
+    private static void corsAllow(CorsConfigurer<HttpSecurity> corsCustomizer) {
+        corsCustomizer.configurationSource(request -> {
+
+            CorsConfiguration configuration = new CorsConfiguration();
+
+            configuration.setAllowedMethods(Collections.singletonList("*"));
+            configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+            configuration.setAllowedHeaders(Collections.singletonList("*"));
+            configuration.setAllowCredentials(true);
+            configuration.setMaxAge(3600L);
+
+            return configuration;
+        });
+    }
 }

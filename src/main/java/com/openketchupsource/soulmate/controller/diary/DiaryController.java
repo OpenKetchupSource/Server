@@ -1,17 +1,14 @@
 package com.openketchupsource.soulmate.controller.diary;
 
 import com.openketchupsource.soulmate.auth.PrincipalHandler;
-import com.openketchupsource.soulmate.domain.Diary;
 import com.openketchupsource.soulmate.domain.Member;
 import com.openketchupsource.soulmate.dto.diary.ClientGptDiaryCreateRequest;
 import com.openketchupsource.soulmate.dto.diary.GptDiaryResponse;
-import com.openketchupsource.soulmate.repository.domain.MemberRepository;
 import com.openketchupsource.soulmate.service.diary.DiaryService;
 import com.openketchupsource.soulmate.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

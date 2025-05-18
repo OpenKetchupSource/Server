@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-// 배포 확인용...
+/**
+ * 배포 확인용 컨트롤러
+ */
 @RestController
 @RequestMapping("/api")
 public class HealthCheckController {

@@ -2,9 +2,7 @@ package com.openketchupsource.soulmate.service.diary;
 
 import com.openketchupsource.soulmate.domain.*;
 import com.openketchupsource.soulmate.domain.Character;
-import com.openketchupsource.soulmate.dto.diary.ClientGptDiaryCreateRequest;
-import com.openketchupsource.soulmate.dto.diary.GptDiaryPrompt;
-import com.openketchupsource.soulmate.dto.diary.GptDiaryResponse;
+import com.openketchupsource.soulmate.dto.diary.*;
 import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatMessageRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatRepository;
@@ -13,13 +11,11 @@ import com.openketchupsource.soulmate.repository.diary.HashTagRepository;
 import com.openketchupsource.soulmate.service.chat.ChatAIService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -100,5 +96,36 @@ public class DiaryService {
     private HashTag findOrCreateHashTag(String name) {
         return hashTagRepository.findByName(name)
                 .orElseGet(() -> hashTagRepository.save(new HashTag(name)));
+    }
+
+    @Transactional
+    public ClientDiaryResponse createDiary(ClientDiaryCreateRequest request, Member member) {
+        List<HashTag> tags = parseHashtags(request.hashtag());
+
+        Character character = characterRepository.findByName(request.character().trim())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 캐릭터입니다: " + request.character()));
+
+        Diary diary = Diary.builder()
+                .title(request.title())
+                .content(request.content())
+                .date(request.date())
+                .member(member)
+                .character(character)
+                .hashtags(tags)
+                .build();
+
+        // 양방향 연관관계 유지
+        tags.forEach(tag -> tag.addDiary(diary)); // tag.diaries에 diary 추가
+
+        diaryRepository.save(diary);
+
+        return new ClientDiaryResponse(
+                diary.getId(),
+                request.date(),
+                request.title(),
+                request.content(),
+                request.hashtag(),
+                request.character()
+        );
     }
 }

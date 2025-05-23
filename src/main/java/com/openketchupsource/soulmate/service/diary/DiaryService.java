@@ -2,10 +2,7 @@ package com.openketchupsource.soulmate.service.diary;
 
 import com.openketchupsource.soulmate.domain.*;
 import com.openketchupsource.soulmate.domain.Character;
-import com.openketchupsource.soulmate.dto.diary.ClientDiaryCreateRequest;
-import com.openketchupsource.soulmate.dto.diary.ClientGptDiaryCreateRequest;
-import com.openketchupsource.soulmate.dto.diary.GptDiaryPrompt;
-import com.openketchupsource.soulmate.dto.diary.GptDiaryResponse;
+import com.openketchupsource.soulmate.dto.diary.*;
 import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatMessageRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatRepository;
@@ -102,7 +99,7 @@ public class DiaryService {
     }
 
     @Transactional
-    public Diary createDiary(ClientDiaryCreateRequest request, Member member) {
+    public ClientDiaryResponse createDiary(ClientDiaryCreateRequest request, Member member) {
         List<HashTag> tags = parseHashtags(request.hashtag());
 
         Character character = characterRepository.findByName(request.character().trim())
@@ -120,6 +117,15 @@ public class DiaryService {
         // 양방향 연관관계 유지
         tags.forEach(tag -> tag.addDiary(diary)); // tag.diaries에 diary 추가
 
-        return diaryRepository.save(diary);
+        diaryRepository.save(diary);
+
+        return new ClientDiaryResponse(
+                diary.getId(),
+                request.date(),
+                request.title(),
+                request.content(),
+                request.hashtag(),
+                request.character()
+        );
     }
 }

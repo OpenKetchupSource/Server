@@ -1,7 +1,11 @@
 package com.openketchupsource.soulmate.controller.diary;
 
+import com.openketchupsource.soulmate.apiPayload.ApiResponse;
 import com.openketchupsource.soulmate.auth.PrincipalHandler;
+import com.openketchupsource.soulmate.domain.Diary;
 import com.openketchupsource.soulmate.domain.Member;
+import com.openketchupsource.soulmate.dto.diary.ClientDiaryCreateRequest;
+import com.openketchupsource.soulmate.dto.diary.ClientDiaryResponse;
 import com.openketchupsource.soulmate.dto.diary.ClientGptDiaryCreateRequest;
 import com.openketchupsource.soulmate.dto.diary.GptDiaryResponse;
 import com.openketchupsource.soulmate.service.diary.DiaryService;
@@ -29,5 +33,14 @@ public class DiaryController {
         Member member = memberService.findById(memberId);
         GptDiaryResponse gptResponse = diaryService.createDiaryFromChat(request, member);
         return ResponseEntity.ok(gptResponse);
+    }
+
+    // 사용자가 직접 일기를 작성하는 경우
+    @PostMapping("/create")
+    public ResponseEntity<ClientDiaryResponse> createDiary(@RequestBody ClientDiaryCreateRequest request) {
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        ClientDiaryResponse response = diaryService.createDiary(request, member);
+        return ResponseEntity.ok(response);
     }
 }

@@ -76,6 +76,7 @@ public class DiaryService {
         diaryRepository.save(diary);
 
         return new GptDiaryResponse(
+                diary.getId(),
                 response.title(),
                 response.content(),
                 response.hashtag(),

@@ -137,7 +137,7 @@ public class DiaryService {
 
         List<DiaryListResponse> diaryListResponseList = new ArrayList<>();
         for (Diary diary : diaryList) {
-            diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags()));
+            diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags().stream().map(HashTag::getName).toList()));
         }
         return diaryListResponseList;
     }
@@ -149,6 +149,10 @@ public class DiaryService {
         if (!diary.getMember().equals(member)) {
             throw new IllegalArgumentException("해당 멤버의 일기가 아닙니다.");
         }
-        return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getComment(), diary.getCharacter(), diary.getHashtags());
+
+        if (diary.getComment() == null) {
+            return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), null, diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
+        }
+        return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getComment().getContext(), diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
     }
 }

@@ -49,7 +49,7 @@ public class DiaryController {
     }
 
     @GetMapping("/get/{diaryId}")
-    public ResponseEntity<DiaryResponse> getDiaryById(@RequestParam Long diaryId) {
+    public ResponseEntity<DiaryResponse> getDiaryById(@PathVariable Long diaryId) {
         Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
         Member member = memberService.findById(memberId);
         DiaryResponse response = diaryService.getDiaryById(member, diaryId);

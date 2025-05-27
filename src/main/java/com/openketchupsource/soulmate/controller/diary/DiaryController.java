@@ -47,4 +47,12 @@ public class DiaryController {
         List<DiaryListResponse> responses = diaryService.getMemberDiaryList(member);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/get/{diaryId}")
+    public ResponseEntity<DiaryResponse> getDiaryById(@RequestParam Long diaryId) {
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        DiaryResponse response = diaryService.getDiaryById(member, diaryId);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -143,7 +143,7 @@ public class DiaryService {
     }
 
     @Transactional
-    DiaryResponse getDiaryById(Member member, Long diaryId) {
+    public DiaryResponse getDiaryById(Member member, Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일기입니다. " + diaryId));
         if (!diary.getMember().equals(member)) {

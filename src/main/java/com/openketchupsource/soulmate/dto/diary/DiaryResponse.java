@@ -1,5 +1,6 @@
 package com.openketchupsource.soulmate.dto.diary;
 
+import com.openketchupsource.soulmate.domain.Character;
 import com.openketchupsource.soulmate.domain.Comment;
 import com.openketchupsource.soulmate.domain.HashTag;
 
@@ -15,4 +16,7 @@ public record DiaryResponse(
         Character character,
         List<HashTag> hashTags
 ) {
+    public static DiaryResponse of(Long id, LocalDate date, String title, String content, Comment comment, Character character, List<HashTag> hashTags) {
+        return new DiaryResponse(id, date, title, content, comment, character, hashTags);
+    }
 }

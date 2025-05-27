@@ -141,4 +141,14 @@ public class DiaryService {
         }
         return diaryListResponseList;
     }
+
+    @Transactional
+    DiaryResponse getDiaryById(Member member, Long diaryId) {
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일기입니다. " + diaryId));
+        if (!diary.getMember().equals(member)) {
+            throw new IllegalArgumentException("해당 멤버의 일기가 아닙니다.");
+        }
+        return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getComment(), diary.getCharacter(), diary.getHashtags());
+    }
 }

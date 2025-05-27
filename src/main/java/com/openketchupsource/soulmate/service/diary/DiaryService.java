@@ -129,4 +129,7 @@ public class DiaryService {
                 request.character()
         );
     }
+
+    @Transactional
+    public List<Diary>
 }

@@ -12,4 +12,7 @@ public record DiaryListResponse(
         String content,
         List<HashTag> hashTags
 ) {
+    public static DiaryListResponse of(Long id, LocalDate date, String title, String content, List<HashTag> hashTags) {
+        return new DiaryListResponse(id, date, title, content, hashTags);
+    }
 }

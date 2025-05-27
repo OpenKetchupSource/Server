@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -131,5 +132,13 @@ public class DiaryService {
     }
 
     @Transactional
-    public List<Diary>
+    public List<DiaryListResponse> getMemberDiaryList(Member member) {
+        List<Diary> diaryList = diaryRepository.findByMember(member).stream().toList();
+
+        List<DiaryListResponse> diaryListResponseList = new ArrayList<>();
+        for (Diary diary : diaryList) {
+            diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags()));
+        }
+        return diaryListResponseList;
+    }
 }

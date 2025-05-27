@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -128,5 +129,30 @@ public class DiaryService {
                 request.hashtag(),
                 request.character()
         );
+    }
+
+    @Transactional
+    public List<DiaryListResponse> getMemberDiaryList(Member member) {
+        List<Diary> diaryList = diaryRepository.findByMember(member).stream().toList();
+
+        List<DiaryListResponse> diaryListResponseList = new ArrayList<>();
+        for (Diary diary : diaryList) {
+            diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags().stream().map(HashTag::getName).toList()));
+        }
+        return diaryListResponseList;
+    }
+
+    @Transactional
+    public DiaryResponse getDiaryById(Member member, Long diaryId) {
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일기입니다. " + diaryId));
+        if (!diary.getMember().equals(member)) {
+            throw new IllegalArgumentException("해당 멤버의 일기가 아닙니다.");
+        }
+
+        if (diary.getComment() == null) {
+            return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), null, diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
+        }
+        return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getComment().getContext(), diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
     }
 }

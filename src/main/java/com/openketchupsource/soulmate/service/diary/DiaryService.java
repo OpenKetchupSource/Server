@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -139,6 +140,8 @@ public class DiaryService {
         for (Diary diary : diaryList) {
             diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags().stream().map(HashTag::getName).toList()));
         }
+
+        diaryListResponseList.sort(Comparator.comparing(DiaryListResponse::date).reversed());
         return diaryListResponseList;
     }
 

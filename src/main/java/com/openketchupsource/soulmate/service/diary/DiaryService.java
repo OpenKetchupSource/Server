@@ -141,7 +141,7 @@ public class DiaryService {
             diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags().stream().map(HashTag::getName).toList()));
         }
 
-        diaryListResponseList.sort(Comparator.comparing(DiaryListResponse::date));
+        diaryListResponseList.sort(Comparator.comparing(DiaryListResponse::date).reversed());
         return diaryListResponseList;
     }
 

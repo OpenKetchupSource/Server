@@ -55,4 +55,23 @@ public class DiaryController {
         DiaryResponse response = diaryService.getDiaryById(member, diaryId);
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/update/{diary_id}")
+    public ResponseEntity<ClientDiaryResponse> updateDiary(
+            @PathVariable("diary_id") Long diaryId,
+            @RequestBody ClientDiaryUpdateRequest request
+    ) {
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        ClientDiaryResponse response = diaryService.updateDiary(diaryId, member, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/delete/{diary_id}")
+    public ResponseEntity<ApiResponse<String>> deleteDiary(@PathVariable("diary_id") Long diaryId) {
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        diaryService.deleteDiary(diaryId, member);
+        return ResponseEntity.ok(ApiResponse.onSuccess("일기 삭제 성공"));
+    }
 }

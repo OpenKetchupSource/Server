@@ -164,4 +164,49 @@ public class DiaryService {
         }
         return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getComment().getContext(), diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
     }
+
+    @Transactional
+    public ClientDiaryResponse updateDiary(Long diaryId, Member member, ClientDiaryUpdateRequest request) {
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일기입니다."));
+
+        if (!diary.getMember().equals(member)) {
+            throw new IllegalArgumentException("해당 멤버의 일기가 아닙니다.");
+        }
+
+        // 기존 해시태그 다 제거하고 새로 추가
+        diary.getHashtags().clear();
+
+        List<HashTag> newTags = parseHashtags(request.hashtag());
+        newTags.forEach(tag -> diary.addHashtag(tag));
+
+        // 필드 업데이트
+        diary.setDate(request.date());
+        diary.setTitle(request.title());
+        diary.setContent(request.content());
+
+        // 저장
+        diaryRepository.save(diary);
+
+        return new ClientDiaryResponse(
+                diary.getId(),
+                diary.getDate(),
+                diary.getTitle(),
+                diary.getContent(),
+                request.hashtag(),
+                diary.getCharacter().getName() // 캐릭터는 수정 안 하니까 그대로
+        );
+    }
+
+    @Transactional
+    public void deleteDiary(Long diaryId, Member member) {
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 일기입니다."));
+
+        if (!diary.getMember().equals(member)) {
+            throw new IllegalArgumentException("해당 멤버의 일기가 아닙니다.");
+        }
+
+        diaryRepository.delete(diary);
+    }
 }

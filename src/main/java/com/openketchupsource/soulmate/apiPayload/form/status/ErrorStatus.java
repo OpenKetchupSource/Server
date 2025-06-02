@@ -15,6 +15,7 @@ public enum ErrorStatus implements BaseCode {
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
+    _NULL_JSON(HttpStatus.BAD_REQUEST, "DIARY4004", "JSON에 내용이 존재하지 않습니다."),
 
     // kakao 로그인 관련 에러
     KAKAO_INFORM_NOT_EXIST(HttpStatus.BAD_REQUEST, "KAKAO4001", "카카오 사용자 정보가 누락되었습니다."),
@@ -29,7 +30,8 @@ public enum ErrorStatus implements BaseCode {
 
     // 일기 관련 에러
     DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4001", "일기가 없습니다."),
-    TITLE_NOT_EXIST(HttpStatus.BAD_REQUEST, "DIARY4002", "제목은 필수입니다.");
+    TITLE_NOT_EXIST(HttpStatus.BAD_REQUEST, "DIARY4002", "제목은 필수입니다."),
+    COMMENT_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "DIARY4003", "이미 코멘트가 존재합니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

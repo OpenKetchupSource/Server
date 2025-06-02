@@ -1,5 +1,7 @@
-package com.openketchupsource.soulmate.domain;
+package com.openketchupsource.soulmate.domain.mapping;
 
+import com.openketchupsource.soulmate.domain.Diary;
+import com.openketchupsource.soulmate.domain.HashTag;
 import jakarta.persistence.*;
 import lombok.*;
 

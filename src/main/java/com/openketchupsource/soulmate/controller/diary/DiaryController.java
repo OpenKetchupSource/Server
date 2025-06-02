@@ -1,18 +1,18 @@
 package com.openketchupsource.soulmate.controller.diary;
 
+import com.openketchupsource.soulmate.apiPayload.ApiResponse;
 import com.openketchupsource.soulmate.auth.PrincipalHandler;
+import com.openketchupsource.soulmate.domain.Diary;
 import com.openketchupsource.soulmate.domain.Member;
-import com.openketchupsource.soulmate.dto.diary.ClientGptDiaryCreateRequest;
-import com.openketchupsource.soulmate.dto.diary.GptDiaryResponse;
+import com.openketchupsource.soulmate.dto.diary.*;
 import com.openketchupsource.soulmate.service.diary.DiaryService;
 import com.openketchupsource.soulmate.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,5 +29,49 @@ public class DiaryController {
         Member member = memberService.findById(memberId);
         GptDiaryResponse gptResponse = diaryService.createDiaryFromChat(request, member);
         return ResponseEntity.ok(gptResponse);
+    }
+
+    // 사용자가 직접 일기를 작성하는 경우
+    @PostMapping("/create")
+    public ResponseEntity<ClientDiaryResponse> createDiary(@RequestBody ClientDiaryCreateRequest request) {
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        ClientDiaryResponse response = diaryService.createDiary(request, member);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<List<DiaryListResponse>> getDiaryListByMember() {
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        List<DiaryListResponse> responses = diaryService.getMemberDiaryList(member);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/get/{diaryId}")
+    public ResponseEntity<DiaryResponse> getDiaryById(@PathVariable Long diaryId) {
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        DiaryResponse response = diaryService.getDiaryById(member, diaryId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update/{diary_id}")
+    public ResponseEntity<ClientDiaryResponse> updateDiary(
+            @PathVariable("diary_id") Long diaryId,
+            @RequestBody ClientDiaryUpdateRequest request
+    ) {
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        ClientDiaryResponse response = diaryService.updateDiary(diaryId, member, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/delete/{diary_id}")
+    public ResponseEntity<ApiResponse<String>> deleteDiary(@PathVariable("diary_id") Long diaryId) {
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        diaryService.deleteDiary(diaryId, member);
+        return ResponseEntity.ok(ApiResponse.onSuccess("일기 삭제 성공"));
     }
 }

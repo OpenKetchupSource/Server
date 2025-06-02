@@ -2,6 +2,7 @@ package com.openketchupsource.soulmate.dto.diary;
 
 // 지피티한테 받은 응답
 public record GptDiaryResponse(
+        Long diaryId,
         String title,
         String content,
         String hashtag,

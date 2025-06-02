@@ -116,7 +116,8 @@ public class DiaryService {
                         tag.getName()
                 ))
                 .toList();
-    }  
+    }
+
     @Transactional
     public ClientDiaryResponse createDiary(ClientDiaryCreateRequest request, Member member) {
         List<HashTag> tags = parseHashtags(request.hashtag());

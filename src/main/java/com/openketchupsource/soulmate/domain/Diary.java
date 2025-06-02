@@ -33,6 +33,7 @@ public class Diary extends BaseTimeEntity {
     @JoinColumn(name = "member_id", nullable = false )
     private Member member;
 
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", nullable = true )
     private Comment comment;

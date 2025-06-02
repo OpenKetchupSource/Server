@@ -53,7 +53,6 @@ public class LoginService {
 
                 member = Member.builder()
                         .name(name)
-                        .email(email != null ? email : "no-email@kakao.com")  // 이메일 동의 안 했을 경우 대비
                         .sub(sub)
                         .build();
                 memberService.saveMember(member);

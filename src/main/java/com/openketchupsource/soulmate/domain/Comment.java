@@ -30,8 +30,9 @@ public class Comment extends BaseTimeEntity {
     private Diary diary;
 
     @Builder
-    public Comment(String context, Character character) {
+    public Comment(String context, Character character, Diary diary) {
         this.context = context;
         this.character = character;
+        this.diary = diary;
     }
 }

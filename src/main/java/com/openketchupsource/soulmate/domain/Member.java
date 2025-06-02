@@ -22,16 +22,12 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String email;
-
     @Column(nullable = false, columnDefinition = "TEXT")
     private String sub; // 소셜 플랫폼 아이디
 
     @Builder
-    public Member(String name, String email, String sub) {
+    public Member(String name, String sub) {
         this.name = name;
-        this.email = email;
         this.sub = sub;
     }
 

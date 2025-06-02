@@ -1,4 +1,4 @@
-package com.openketchupsource.soulmate.controller.comment;
+package com.openketchupsource.soulmate.controller.diary;
 
 import com.openketchupsource.soulmate.apiPayload.ApiResponse;
 import com.openketchupsource.soulmate.converter.CommentConverter;

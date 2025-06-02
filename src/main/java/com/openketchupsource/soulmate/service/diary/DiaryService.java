@@ -2,6 +2,10 @@ package com.openketchupsource.soulmate.service.diary;
 
 import com.openketchupsource.soulmate.domain.*;
 import com.openketchupsource.soulmate.domain.Character;
+import com.openketchupsource.soulmate.dto.diary.ClientGptDiaryCreateRequest;
+import com.openketchupsource.soulmate.dto.diary.GptDiaryPrompt;
+import com.openketchupsource.soulmate.dto.diary.GptDiaryResponse;
+import com.openketchupsource.soulmate.dto.diary.HashTagDTO;
 import com.openketchupsource.soulmate.dto.diary.*;
 import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatMessageRepository;
@@ -101,6 +105,18 @@ public class DiaryService {
                 .orElseGet(() -> hashTagRepository.save(new HashTag(name)));
     }
 
+    // 모든 해시태그 리스트 반환
+    @Transactional
+    public List<HashTagDTO> findAllHashTags() {
+        List<HashTag> allHashTags = hashTagRepository.findAll();
+
+        return allHashTags.stream()
+                .map(tag -> new HashTagDTO(
+                        tag.getId(),
+                        tag.getName()
+                ))
+                .toList();
+      
     @Transactional
     public ClientDiaryResponse createDiary(ClientDiaryCreateRequest request, Member member) {
         List<HashTag> tags = parseHashtags(request.hashtag());

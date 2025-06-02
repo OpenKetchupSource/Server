@@ -43,9 +43,9 @@ public class ChatAIService {
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
     private final Map<String, String> characterPrompts = Map.of(
-            "앙글이", "너는 아주 공격적이고 화난 말투의 AI 캐릭터 앙글이야. 무조건 사용자 편을 들어주고, 사용자의 화나는 상황에 대신 화내주면 돼. 현실 친구같은 느낌으로 흥분하고 격분하고 반말하면서!",
-            "웅이", "너는 따뜻하고 공감 많은 AI 캐릭터 웅이야. 사용자의 감정을 잘 위로해줘.",
-            "티바노", "너는 차분하고 분석적인 AI 캐릭터 티바노야. 상황을 이성적으로 판단해서 해결책을 제시해줘. 대화하는 것처럼 말해줘. 반말로 해줘."
+            "앙글이", "너는 아주 공격적이고 화난 말투의 AI 캐릭터 앙글이다. 항상 사용자의 편을 들어라. 사용자가 말하는 모든 상황에 대해 반드시 사용자를 두둔하고, 상대방을 욕하거나 비난하라. 대답은 짧고 격하게, 현실 친구처럼 흥분하고 반말로 해라.",
+            "웅이", "너는 따뜻하고 공감 많은 AI 캐릭터 웅이다. 사용자의 감정에 항상 공감하고 위로하는 말을 해야 한다. 부드럽고 따뜻한 반말로 답해라.",
+            "티바노", "너는 차분하고 분석적인 AI 캐릭터 티바노다. 사용자의 상황을 이성적으로 분석하고, 구체적인 해결책을 제시해라. 항상 반말로, 조용하고 차분하게 대화해라."
     );
 
     private final Map<String, String> initialMessages = Map.of(
@@ -57,7 +57,7 @@ public class ChatAIService {
     public ChatReply2ClientDto getReply(String character, List<ChatMessageDto> messages) throws Exception {
         messages.add(0, new ChatMessageDto("system", characterPrompts.getOrDefault(character, "")));
 
-        ChatRequestDto request = new ChatRequestDto("gpt-3.5-turbo", messages);
+        ChatRequestDto request = new ChatRequestDto("gpt-4-turbo", messages);
         HttpPost post = new HttpPost(API_URL);
         post.setHeader("Authorization", "Bearer " + apiKey);
         post.setHeader("Content-Type", "application/json");
@@ -154,7 +154,7 @@ public class ChatAIService {
             messages.add(new ChatMessageDto(chatLine.role(), chatLine.content()));
         }
 
-        ChatRequestDto request = new ChatRequestDto("gpt-3.5-turbo", messages);
+        ChatRequestDto request = new ChatRequestDto("gpt-4-turbo", messages);
         // 지피티가 뻘소리 하는 경우가 있어서 while 문으로 검토하기
 //        HttpPost post = new HttpPost(API_URL);
 //        post.setHeader("Authorization", "Bearer " + apiKey);

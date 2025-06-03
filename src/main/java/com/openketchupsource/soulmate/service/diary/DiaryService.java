@@ -18,10 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -119,11 +116,13 @@ public class DiaryService {
     }
 
     @Transactional
-    public List<DiaryListResponse> findDiaryListByHashtags(String hashtag) {
+    public List<DiaryListResponse> findDiaryListByHashtags(String hashtag, Member member) throws Exception {
         HashTag hashTag = hashTagRepository.findByName(hashtag).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 해시태그입니다." + hashtag)
         );
         List<Diary> diaryList = hashTag.getDiaries();
+
+        diaryList.removeIf(diary -> !Objects.equals(diary.getMember().getId(), member.getId()));
 
         return getDiaryListResponseList(diaryList);
     }

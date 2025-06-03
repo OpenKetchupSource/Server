@@ -1,5 +1,6 @@
 package com.openketchupsource.soulmate.controller.diary;
 
+import com.openketchupsource.soulmate.dto.diary.DiaryListResponse;
 import com.openketchupsource.soulmate.dto.diary.HashTagDTO;
 import com.openketchupsource.soulmate.service.diary.DiaryService;
 import lombok.RequiredArgsConstructor;
@@ -18,5 +19,11 @@ public class HashTagController {
     public ResponseEntity<List<HashTagDTO>> showAllHashTags() {
         List<HashTagDTO> AllHashTags = diaryService.findAllHashTags();
         return ResponseEntity.ok(AllHashTags);
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<List<DiaryListResponse>> getDiaryListByHashTag(@RequestParam String hashTag) {
+        List<DiaryListResponse> responses = diaryService.findDiaryListByHashtags(hashTag);
+        return ResponseEntity.ok(responses);
     }
 }

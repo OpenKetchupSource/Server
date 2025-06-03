@@ -119,6 +119,31 @@ public class DiaryService {
     }
 
     @Transactional
+    public List<DiaryListResponse> findDiaryListByHashtags(String hashtag) {
+        HashTag hashTag = hashTagRepository.findByName(hashtag).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 해시태그입니다." + hashtag)
+        );
+        List<Diary> diaryList = hashTag.getDiaries();
+
+        return getDiaryListResponseList(diaryList);
+    }
+
+    private static List<DiaryListResponse> getDiaryListResponseList(List<Diary> diaryList) {
+        List<DiaryListResponse> diaryListResponseList = new ArrayList<>();
+        for (Diary diary : diaryList) {
+            diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags().stream().map(HashTag::getName).toList()));
+        }
+
+        diaryListResponseList.sort(
+                Comparator
+                        .comparing(DiaryListResponse::date)
+                        .reversed()
+                        .thenComparing(DiaryListResponse::id, Comparator.reverseOrder())
+        );
+        return diaryListResponseList;
+    }
+
+    @Transactional
     public ClientDiaryResponse createDiary(ClientDiaryCreateRequest request, Member member) {
         List<HashTag> tags = parseHashtags(request.hashtag());
 
@@ -153,17 +178,7 @@ public class DiaryService {
     public List<DiaryListResponse> getMemberDiaryList(Member member) {
         List<Diary> diaryList = diaryRepository.findByMember(member).stream().toList();
 
-        List<DiaryListResponse> diaryListResponseList = new ArrayList<>();
-        for (Diary diary : diaryList) {
-            diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags().stream().map(HashTag::getName).toList()));
-        }
-
-        diaryListResponseList.sort(
-                Comparator
-                        .comparing(DiaryListResponse::date)
-                        .reversed()
-                        .thenComparing(DiaryListResponse::id, Comparator.reverseOrder())
-        );
+        List<DiaryListResponse> diaryListResponseList = getDiaryListResponseList(diaryList);
 
         return diaryListResponseList;
     }

@@ -40,4 +40,19 @@ public class CommentService {
         return newComment;
     }
 
+    @Transactional
+    public Comment bookmarkComment (Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("코멘트가 존재하지 않습니다. " + commentId)
+        );
+
+        if (comment.getIsStored() == 0) {
+            comment.setIsStored(1);
+        } else {
+            comment.setIsStored(0);
+        }
+
+        return commentRepository.save(comment);
+    }
+
 }

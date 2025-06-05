@@ -6,7 +6,9 @@ import com.openketchupsource.soulmate.domain.Character;
 import com.openketchupsource.soulmate.domain.Comment;
 import com.openketchupsource.soulmate.domain.Diary;
 import com.openketchupsource.soulmate.domain.Member;
+import com.openketchupsource.soulmate.dto.diary.CommentListResponse;
 import com.openketchupsource.soulmate.dto.diary.CommentRequest;
+import com.openketchupsource.soulmate.dto.diary.DiaryListResponse;
 import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.diary.CommentRepository;
 import com.openketchupsource.soulmate.repository.diary.DiaryRepository;
@@ -14,6 +16,10 @@ import com.openketchupsource.soulmate.apiPayload.form.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +64,24 @@ public class CommentService {
         }
 
         return commentRepository.save(comment);
+    }
+
+    @Transactional
+    public List<CommentListResponse> getBookmarkedComments (Member member, String character) {
+        List<Comment> commentList = commentRepository.findByCharacter_NameAndIsStored(character, 1);
+
+        commentList.removeIf(comment -> !comment.getDiary().getMember().equals(member));
+        List<CommentListResponse> responses = new ArrayList<>();
+        for (Comment comment : commentList) {
+            CommentListResponse response = CommentListResponse.of(comment.getId(), comment.getContext(), comment.getIsStored(), comment.getCharacter().getName(), comment.getDiary().getDate());
+            responses.add(response);
+        }
+
+        responses.sort(Comparator
+                .comparing(CommentListResponse::date)
+                .reversed()
+                .thenComparing(CommentListResponse::id, Comparator.reverseOrder()));
+        return responses;
     }
 
 }

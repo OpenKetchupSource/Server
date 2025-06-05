@@ -179,9 +179,14 @@ public class DiaryService {
         }
 
         if (diary.getComment() == null) {
-            return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), null, null, diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
+            return DiaryResponse.of(
+                    diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), null, null,
+                    0, diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
         }
-        return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getComment().getId(), diary.getComment().getContext(), diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
+        return DiaryResponse.of(
+                diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getComment().getId(),
+                diary.getComment().getContext(), diary.getComment().getIsStored(), diary.getCharacter().getName(),
+                diary.getHashtags().stream().map(HashTag::getName).toList());
     }
 
     @Transactional

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByCharacter_NameAndIsStored(String characterName, int isStored);
-
+    void deleteAllByDiaryId(Long diaryId);
 }

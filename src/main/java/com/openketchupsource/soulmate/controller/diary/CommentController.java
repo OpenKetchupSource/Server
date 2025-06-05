@@ -5,12 +5,15 @@ import com.openketchupsource.soulmate.auth.PrincipalHandler;
 import com.openketchupsource.soulmate.converter.CommentConverter;
 import com.openketchupsource.soulmate.domain.Comment;
 import com.openketchupsource.soulmate.domain.Member;
+import com.openketchupsource.soulmate.dto.diary.CommentListResponse;
 import com.openketchupsource.soulmate.dto.diary.CommentRequest;
 import com.openketchupsource.soulmate.dto.diary.CommentResponse;
 import com.openketchupsource.soulmate.service.diary.CommentService;
 import com.openketchupsource.soulmate.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,5 +35,13 @@ public class CommentController {
         Member member = memberService.findById(memberId);
         Comment comment = commentService.bookmarkComment(commentId, member);
         return ApiResponse.onSuccess(comment);
+    }
+
+    @GetMapping("/bookmark/get")
+    public ApiResponse<List<CommentListResponse>> getBookmarkComments(@RequestParam String character) {
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        List<CommentListResponse> responses = commentService.getBookmarkedComments(member, character);
+        return ApiResponse.onSuccess(responses);
     }
 }

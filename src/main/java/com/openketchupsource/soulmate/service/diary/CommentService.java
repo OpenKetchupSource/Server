@@ -9,6 +9,7 @@ import com.openketchupsource.soulmate.domain.Member;
 import com.openketchupsource.soulmate.dto.diary.CommentListResponse;
 import com.openketchupsource.soulmate.dto.diary.CommentRequest;
 import com.openketchupsource.soulmate.dto.diary.DiaryListResponse;
+import com.openketchupsource.soulmate.dto.diary.StoredCommentResponse;
 import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.diary.CommentRepository;
 import com.openketchupsource.soulmate.repository.diary.DiaryRepository;
@@ -48,7 +49,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment bookmarkComment (Long commentId, Member member) {
+    public StoredCommentResponse bookmarkComment (Long commentId, Member member) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("코멘트가 존재하지 않습니다. " + commentId)
         );
@@ -63,12 +64,16 @@ public class CommentService {
             comment.setIsStored(0);
         }
 
-        return commentRepository.save(comment);
+        commentRepository.save(comment);
+        return StoredCommentResponse.of(comment.getId(), comment.getContext(), comment.getIsStored(), comment.getCharacter().getName());
     }
 
     @Transactional
-    public List<CommentListResponse> getBookmarkedComments (Member member, String character) {
-        List<Comment> commentList = commentRepository.findByCharacter_NameAndIsStored(character, 1);
+    public List<CommentListResponse> getBookmarkedComments (Member member, Long characterId) {
+        Character character = characterRepository.findById(characterId).orElseThrow(
+                () -> new DiaryHandler(ErrorStatus.CHARACTER_NOT_FOUND)
+        );
+        List<Comment> commentList = commentRepository.findByCharacter_NameAndIsStored(character.getName(), 1);
 
         commentList.removeIf(comment -> !comment.getDiary().getMember().equals(member));
         List<CommentListResponse> responses = new ArrayList<>();

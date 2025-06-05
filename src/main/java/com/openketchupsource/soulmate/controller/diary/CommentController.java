@@ -8,6 +8,7 @@ import com.openketchupsource.soulmate.domain.Member;
 import com.openketchupsource.soulmate.dto.diary.CommentListResponse;
 import com.openketchupsource.soulmate.dto.diary.CommentRequest;
 import com.openketchupsource.soulmate.dto.diary.CommentResponse;
+import com.openketchupsource.soulmate.dto.diary.StoredCommentResponse;
 import com.openketchupsource.soulmate.service.diary.CommentService;
 import com.openketchupsource.soulmate.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -30,18 +31,18 @@ public class CommentController {
     }
 
     @PostMapping("/bookmark")
-    public ApiResponse<Comment> bookmarkComment(@RequestParam Long commentId) {
+    public ApiResponse<StoredCommentResponse> bookmarkComment(@RequestParam Long commentId) {
         Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
         Member member = memberService.findById(memberId);
-        Comment comment = commentService.bookmarkComment(commentId, member);
+        StoredCommentResponse comment = commentService.bookmarkComment(commentId, member);
         return ApiResponse.onSuccess(comment);
     }
 
     @GetMapping("/bookmark/get")
-    public ApiResponse<List<CommentListResponse>> getBookmarkComments(@RequestParam String character) {
+    public ApiResponse<List<CommentListResponse>> getBookmarkComments(@RequestParam Long characterId) {
         Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
         Member member = memberService.findById(memberId);
-        List<CommentListResponse> responses = commentService.getBookmarkedComments(member, character);
+        List<CommentListResponse> responses = commentService.getBookmarkedComments(member, characterId);
         return ApiResponse.onSuccess(responses);
     }
 }

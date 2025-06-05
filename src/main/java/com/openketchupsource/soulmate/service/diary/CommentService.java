@@ -5,6 +5,7 @@ import com.openketchupsource.soulmate.converter.CommentConverter;
 import com.openketchupsource.soulmate.domain.Character;
 import com.openketchupsource.soulmate.domain.Comment;
 import com.openketchupsource.soulmate.domain.Diary;
+import com.openketchupsource.soulmate.domain.Member;
 import com.openketchupsource.soulmate.dto.diary.CommentRequest;
 import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.diary.CommentRepository;
@@ -41,10 +42,14 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment bookmarkComment (Long commentId) {
+    public Comment bookmarkComment (Long commentId, Member member) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("코멘트가 존재하지 않습니다. " + commentId)
         );
+
+        if (!comment.getDiary().getMember().equals(member)) {
+            throw new IllegalArgumentException("사용자의 일기에 달린 코멘트가 아닙니다. " + commentId);
+        }
 
         if (comment.getIsStored() == 0) {
             comment.setIsStored(1);

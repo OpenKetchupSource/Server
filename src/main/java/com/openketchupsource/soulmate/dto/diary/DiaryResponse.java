@@ -13,10 +13,11 @@ public record DiaryResponse(
         String content,
         Long commentId,
         String comment,
+        int isStored,
         String character,
         List<String> hashTags
 ) {
-    public static DiaryResponse of(Long id, LocalDate date, String title, String content, Long commentId, String comment, String character, List<String> hashTags) {
-        return new DiaryResponse(id, date, title, content, commentId, comment, character, hashTags);
+    public static DiaryResponse of(Long id, LocalDate date, String title, String content, Long commentId, String comment, int isStored, String character, List<String> hashTags) {
+        return new DiaryResponse(id, date, title, content, commentId, comment, isStored, character, hashTags);
     }
 }

@@ -222,6 +222,7 @@ Spring Boot는 빠른 백엔드 애플리케이션 개발을 위한 프레임워
 ### 0. Github clone
 `git clone https://github.com/OpenKetchupSource/Server.git` <br>
 `cd Server`
+
 deploy 브랜치에서 배포 
 
 ### 1. 빌드 및 실행 (JDK 21과 MySQL이 설치되어 있어야 합니다.)

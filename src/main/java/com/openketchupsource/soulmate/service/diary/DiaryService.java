@@ -10,6 +10,7 @@ import com.openketchupsource.soulmate.dto.diary.*;
 import com.openketchupsource.soulmate.repository.character.CharacterRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatMessageRepository;
 import com.openketchupsource.soulmate.repository.chat.ChatRepository;
+import com.openketchupsource.soulmate.repository.diary.CommentRepository;
 import com.openketchupsource.soulmate.repository.diary.DiaryRepository;
 import com.openketchupsource.soulmate.repository.diary.HashTagRepository;
 import com.openketchupsource.soulmate.service.chat.ChatAIService;
@@ -25,6 +26,7 @@ import java.util.*;
 public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final ChatRepository chatRepository;
+    private final CommentRepository commentRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final CharacterRepository characterRepository;
     private final HashTagRepository hashTagRepository;
@@ -191,9 +193,14 @@ public class DiaryService {
         }
 
         if (diary.getComment() == null) {
-            return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), null, diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
+            return DiaryResponse.of(
+                    diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), null, null,
+                    0, diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
         }
-        return DiaryResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getComment().getContext(), diary.getCharacter().getName(), diary.getHashtags().stream().map(HashTag::getName).toList());
+        return DiaryResponse.of(
+                diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getComment().getId(),
+                diary.getComment().getContext(), diary.getComment().getIsStored(), diary.getCharacter().getName(),
+                diary.getHashtags().stream().map(HashTag::getName).toList());
     }
 
     @Transactional
@@ -238,6 +245,7 @@ public class DiaryService {
             throw new IllegalArgumentException("해당 멤버의 일기가 아닙니다.");
         }
 
+        commentRepository.deleteAllByDiaryId(diaryId);
         diaryRepository.delete(diary);
     }
 }

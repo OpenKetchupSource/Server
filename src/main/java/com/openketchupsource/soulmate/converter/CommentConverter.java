@@ -18,9 +18,13 @@ public class CommentConverter {
     }
 
     public static Comment toComment(String comment, Character character, Diary diary){
-        if (comment == null || character == null || diary == null) {
+        if (comment == null || character == null) {
+            System.out.println("코멘트 혹은 캐릭터가 없음");
             throw new DiaryHandler(ErrorStatus._NULL_JSON);
-        }else{
+        }else if(diary == null){
+            throw new DiaryHandler(ErrorStatus.DIARY_NOT_FOUND);
+        }
+        else{
             return Comment.builder()
                     .context(comment)
                     .character(character)

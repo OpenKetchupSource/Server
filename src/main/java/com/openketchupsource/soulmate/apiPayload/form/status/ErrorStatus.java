@@ -31,7 +31,8 @@ public enum ErrorStatus implements BaseCode {
     // 일기 관련 에러
     DIARY_NOT_FOUND(HttpStatus.BAD_REQUEST, "DIARY4001", "일기가 없습니다."),
     TITLE_NOT_EXIST(HttpStatus.BAD_REQUEST, "DIARY4002", "제목은 필수입니다."),
-    COMMENT_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "DIARY4003", "이미 코멘트가 존재합니다.");
+    COMMENT_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "DIARY4003", "이미 코멘트가 존재합니다."),
+    NO_MATCHED_HASHTAG(HttpStatus.BAD_REQUEST, "DIARY4004", "해당 사용자가 작성한 다이어리에 해시태그가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

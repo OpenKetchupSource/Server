@@ -1,5 +1,7 @@
 package com.openketchupsource.soulmate.service.diary;
 
+import com.openketchupsource.soulmate.apiPayload.exception.handler.DiaryHandler;
+import com.openketchupsource.soulmate.apiPayload.form.status.ErrorStatus;
 import com.openketchupsource.soulmate.domain.*;
 import com.openketchupsource.soulmate.domain.Character;
 import com.openketchupsource.soulmate.dto.diary.ClientGptDiaryCreateRequest;
@@ -19,10 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -109,15 +108,45 @@ public class DiaryService {
 
     // 모든 해시태그 리스트 반환
     @Transactional
-    public List<HashTagDTO> findAllHashTags() {
-        List<HashTag> allHashTags = hashTagRepository.findAll();
-
+    public List<HashTagDTO> findAllHashTags(Member member) {
+        Long memberId = member.getId();
+        List<HashTag> allHashTags = hashTagRepository.findAllByMemberId(memberId);
+        if (allHashTags.isEmpty()) {
+            throw new DiaryHandler(ErrorStatus.NO_MATCHED_HASHTAG);
+        }
         return allHashTags.stream()
                 .map(tag -> new HashTagDTO(
                         tag.getId(),
                         tag.getName()
                 ))
                 .toList();
+    }
+
+    @Transactional
+    public List<DiaryListResponse> findDiaryListByHashtags(String hashtag, Member member) throws Exception {
+        HashTag hashTag = hashTagRepository.findByName(hashtag).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 해시태그입니다." + hashtag)
+        );
+        List<Diary> diaryList = hashTag.getDiaries();
+
+        diaryList.removeIf(diary -> !Objects.equals(diary.getMember().getId(), member.getId()));
+
+        return getDiaryListResponseList(diaryList);
+    }
+
+    private static List<DiaryListResponse> getDiaryListResponseList(List<Diary> diaryList) {
+        List<DiaryListResponse> diaryListResponseList = new ArrayList<>();
+        for (Diary diary : diaryList) {
+            diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags().stream().map(HashTag::getName).toList()));
+        }
+
+        diaryListResponseList.sort(
+                Comparator
+                        .comparing(DiaryListResponse::date)
+                        .reversed()
+                        .thenComparing(DiaryListResponse::id, Comparator.reverseOrder())
+        );
+        return diaryListResponseList;
     }
 
     @Transactional
@@ -155,17 +184,7 @@ public class DiaryService {
     public List<DiaryListResponse> getMemberDiaryList(Member member) {
         List<Diary> diaryList = diaryRepository.findByMember(member).stream().toList();
 
-        List<DiaryListResponse> diaryListResponseList = new ArrayList<>();
-        for (Diary diary : diaryList) {
-            diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags().stream().map(HashTag::getName).toList()));
-        }
-
-        diaryListResponseList.sort(
-                Comparator
-                        .comparing(DiaryListResponse::date)
-                        .reversed()
-                        .thenComparing(DiaryListResponse::id, Comparator.reverseOrder())
-        );
+        List<DiaryListResponse> diaryListResponseList = getDiaryListResponseList(diaryList);
 
         return diaryListResponseList;
     }

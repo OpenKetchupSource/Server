@@ -1,5 +1,8 @@
 package com.openketchupsource.soulmate.service.member;
 
+import com.openketchupsource.soulmate.apiPayload.exception.handler.DiaryHandler;
+import com.openketchupsource.soulmate.apiPayload.exception.handler.SettingHandler;
+import com.openketchupsource.soulmate.apiPayload.form.status.ErrorStatus;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import com.openketchupsource.soulmate.domain.Member;
@@ -12,9 +15,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public Member findById(final Long id) {
-        return memberRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("해당 id의 회원이 존재하지 않습니다.")
-        );
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new DiaryHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
     public boolean isExistsBySub(String sub) {

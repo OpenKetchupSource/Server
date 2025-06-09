@@ -21,10 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -126,6 +123,33 @@ public class DiaryService {
     }
 
     @Transactional
+    public List<DiaryListResponse> findDiaryListByHashtags(String hashtag, Member member) throws Exception {
+        HashTag hashTag = hashTagRepository.findByName(hashtag).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 해시태그입니다." + hashtag)
+        );
+        List<Diary> diaryList = hashTag.getDiaries();
+
+        diaryList.removeIf(diary -> !Objects.equals(diary.getMember().getId(), member.getId()));
+
+        return getDiaryListResponseList(diaryList);
+    }
+
+    private static List<DiaryListResponse> getDiaryListResponseList(List<Diary> diaryList) {
+        List<DiaryListResponse> diaryListResponseList = new ArrayList<>();
+        for (Diary diary : diaryList) {
+            diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags().stream().map(HashTag::getName).toList()));
+        }
+
+        diaryListResponseList.sort(
+                Comparator
+                        .comparing(DiaryListResponse::date)
+                        .reversed()
+                        .thenComparing(DiaryListResponse::id, Comparator.reverseOrder())
+        );
+        return diaryListResponseList;
+    }
+
+    @Transactional
     public ClientDiaryResponse createDiary(ClientDiaryCreateRequest request, Member member) {
         List<HashTag> tags = parseHashtags(request.hashtag());
 
@@ -160,17 +184,7 @@ public class DiaryService {
     public List<DiaryListResponse> getMemberDiaryList(Member member) {
         List<Diary> diaryList = diaryRepository.findByMember(member).stream().toList();
 
-        List<DiaryListResponse> diaryListResponseList = new ArrayList<>();
-        for (Diary diary : diaryList) {
-            diaryListResponseList.add(DiaryListResponse.of(diary.getId(), diary.getDate(), diary.getTitle(), diary.getContent(), diary.getHashtags().stream().map(HashTag::getName).toList()));
-        }
-
-        diaryListResponseList.sort(
-                Comparator
-                        .comparing(DiaryListResponse::date)
-                        .reversed()
-                        .thenComparing(DiaryListResponse::id, Comparator.reverseOrder())
-        );
+        List<DiaryListResponse> diaryListResponseList = getDiaryListResponseList(diaryList);
 
         return diaryListResponseList;
     }

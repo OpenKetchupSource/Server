@@ -1,6 +1,7 @@
 package com.openketchupsource.soulmate.repository.diary;
 
 import com.openketchupsource.soulmate.domain.Diary;
+import com.openketchupsource.soulmate.domain.HashTag;
 import com.openketchupsource.soulmate.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 

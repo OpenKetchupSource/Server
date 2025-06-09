@@ -41,14 +41,14 @@
 
 > ⚠️ **PR이 승인되기 전까지 `main` 브랜치에 직접 Push하지 않습니다.**
 
-### 5. 코드 스타일
+### 4. 코드 스타일
 - Java: Google Java Style Guide 준수
 - Controller, Service, Repository 계층 구분
 - 가능한 한 **테스트 코드** 작성 (단위 테스트 권장)
 - 불필요한 코드, 주석 제거
 - `@Transactional`, `@Valid` 등 Spring 기본 Annotation 적극 활용
 
-### 6. 커뮤니케이션
+### 5. 커뮤니케이션
 - 모든 커뮤니케이션은 GitHub Issue 또는 PR 내 코멘트로 진행합니다.
 - 질문이나 제안은 언제든 환영합니다!
 

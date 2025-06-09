@@ -21,7 +21,9 @@ public class HashTagController {
 
     @GetMapping("/names")
     public ResponseEntity<List<HashTagDTO>> showAllHashTags() {
-        List<HashTagDTO> AllHashTags = diaryService.findAllHashTags();
+        Long memberId = PrincipalHandler.getMemberIdFromPrincipal();
+        Member member = memberService.findById(memberId);
+        List<HashTagDTO> AllHashTags = diaryService.findAllHashTags(member);
         return ResponseEntity.ok(AllHashTags);
     }
 

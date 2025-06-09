@@ -1,5 +1,7 @@
 package com.openketchupsource.soulmate.service.diary;
 
+import com.openketchupsource.soulmate.apiPayload.exception.handler.DiaryHandler;
+import com.openketchupsource.soulmate.apiPayload.form.status.ErrorStatus;
 import com.openketchupsource.soulmate.domain.*;
 import com.openketchupsource.soulmate.domain.Character;
 import com.openketchupsource.soulmate.dto.diary.ClientGptDiaryCreateRequest;
@@ -106,9 +108,12 @@ public class DiaryService {
 
     // 모든 해시태그 리스트 반환
     @Transactional
-    public List<HashTagDTO> findAllHashTags() {
-        List<HashTag> allHashTags = hashTagRepository.findAll();
-
+    public List<HashTagDTO> findAllHashTags(Member member) {
+        Long memberId = member.getId();
+        List<HashTag> allHashTags = hashTagRepository.findAllByMemberId(memberId);
+        if (allHashTags.isEmpty()) {
+            throw new DiaryHandler(ErrorStatus.NO_MATCHED_HASHTAG);
+        }
         return allHashTags.stream()
                 .map(tag -> new HashTagDTO(
                         tag.getId(),

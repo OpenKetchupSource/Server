@@ -218,18 +218,8 @@ Spring Boot는 빠른 백엔드 애플리케이션 개발을 위한 프레임워
 - 로컬 개발 지원: H2 인메모리 DB, application-SECRET-KEY.properties를 통한 profile 분기
 ---
 
-## 📦 설치 및 실행
-### 0. Github clone
-`git clone https://github.com/OpenKetchupSource/Server.git` <br>
-`cd Server`
-
-* deploy 브랜치에서 작업
-
-### 1. 빌드 및 실행 (JDK 21과 MySQL이 설치되어 있어야 합니다.)
-   - Gradle 빌드: 
-   `./gradlew build`
-   - 서버 실행: 
-   `java -jar build/libs/soulmate-0.0.1-SNAPSHOT.jar 2>&1 & (무중단 배포)`
+## 📦 실행
+배포 URL : [https://withsoulmate.netlify.app/]
 
 ## 📜 사용 라이브러리 및 설정 요약
 ### 🔧 주요 의존성 (dependencies)

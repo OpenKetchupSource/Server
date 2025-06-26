@@ -1,5 +1,11 @@
 # 💞 Soulmate
 
+## Contributors
+- dodaaaaam (김혜린)
+- acidify04 (박은효)
+- cherrynniii (박채린)
+- jungsunbeen (정선빈)
+
 ## 🧠 프로젝트 소개
 
 **Soulmate**는 사용자에게 깊은 이해와 공감을 제공하는 감성 기반 일기 서비스입니다.  
